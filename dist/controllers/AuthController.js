@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../models/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password, email } = req.body;
     try {
@@ -43,4 +44,43 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.sendStatus(500).send({ message: "Something went wrong" });
     }
 });
-exports.default = { register };
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userCred = req.body;
+    try {
+        const user = yield User_1.default.findOne({ email: userCred.email });
+        if (!user) {
+            return res.status(400).send({ message: "User not found" });
+        }
+        if (user) {
+            const { _id, username, email, password } = user;
+            const checkPassword = bcryptjs_1.default.compareSync(userCred.password, password);
+            if (!checkPassword) {
+                return res.status(400).send({ message: "Invalid password" });
+            }
+            const token = jsonwebtoken_1.default.sign({ _id, username, email }, "key");
+            if (!token) {
+                console.log(token);
+                console.log("error genarating token");
+                return res.status(400).send({ message: "Something went wrong" });
+            }
+            if (checkPassword) {
+                yield User_1.default.findOneAndUpdate({ _id: _id }, // Filter to find the document
+                { $set: { sessionToken: token.toString() } }, // Update operation
+                { new: true });
+                res.status(200).send({
+                    message: "User logged in successfully",
+                    userInfo: {
+                        userId: _id,
+                        username,
+                        email,
+                    },
+                });
+            }
+        }
+    }
+    catch (err) {
+        console.log(err);
+        res.sendStatus(500).send({ message: "Something went wrong" });
+    }
+});
+exports.default = { register, login };
