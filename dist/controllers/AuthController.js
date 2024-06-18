@@ -64,9 +64,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 return res.status(400).send({ message: "Something went wrong" });
             }
             if (checkPassword) {
-                yield User_1.default.findOneAndUpdate({ _id: _id }, // Filter to find the document
-                { $set: { sessionToken: token.toString() } }, // Update operation
-                { new: true });
+                req.session.token = token;
+                req.session.userId = _id.toString();
+                req.session.save();
                 res.status(200).send({
                     message: "User logged in successfully",
                     userInfo: {
@@ -80,7 +80,24 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         console.log(err);
-        res.sendStatus(500).send({ message: "Something went wrong" });
+        res.status(500).send({ message: "Something went wrong" });
     }
 });
-exports.default = { register, login };
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ message: "Something went wrong" });
+            }
+            else {
+                res.status(200).send({ message: "User logged out successfully" });
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send({ message: "Something went wrong" });
+    }
+});
+exports.default = { register, login, logout };

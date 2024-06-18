@@ -64,11 +64,9 @@ const login = async (req: Request, res: Response) => {
         return res.status(400).send({ message: "Something went wrong" });
       }
       if (checkPassword) {
-        await UserModel.findOneAndUpdate(
-          { _id: _id }, // Filter to find the document
-          { $set: { sessionToken: token.toString() } }, // Update operation
-          { new: true }
-        );
+        req.session.token = token;
+        req.session.userId = _id.toString();
+        req.session.save();
 
         res.status(200).send({
           message: "User logged in successfully",
@@ -82,8 +80,24 @@ const login = async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.log(err);
-    res.sendStatus(500).send({ message: "Something went wrong" });
+    res.status(500).send({ message: "Something went wrong" });
   }
 };
 
-export default { register, login };
+const logout = async (req: Request, res: Response) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: "Something went wrong" });
+      } else {
+        res.status(200).send({ message: "User logged out successfully" });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ message: "Something went wrong" });
+  }
+};
+
+export default { register, login, logout };
