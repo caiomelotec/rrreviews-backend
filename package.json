@@ -12,11 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/connect-mongodb-session": "^2.4.7",
+    "@types/express-session": "^1.18.0",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose": "^5.11.97",
     "bcryptjs": "^2.4.3",
     "connect-mongodb-session": "^5.0.0",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "expresss": "^0.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1"
