@@ -47,3 +47,4 @@ const fetchComments = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).send({ message: "Something went wrong" });
     }
 });
+exports.default = { createComment, fetchComments };

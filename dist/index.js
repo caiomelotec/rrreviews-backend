@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const AuthRoutes_1 = __importDefault(require("./routes/AuthRoutes"));
+const CommentRoutes_1 = __importDefault(require("./routes/CommentRoutes"));
 const express_session_1 = __importDefault(require("express-session"));
 const MongoStore = require("connect-mongodb-session")(express_session_1.default);
 const app = (0, express_1.default)();
@@ -18,6 +19,7 @@ mongoose_1.default
     .catch((err) => {
     console.log(err);
 });
+// express session
 const store = new MongoStore({
     uri: "mongodb://localhost:27017/rrreviews",
     collection: "sessions",
@@ -34,6 +36,7 @@ app.get("/", (req, res) => {
     res.status(200).send("Hello World");
 });
 app.use("/api/auth", AuthRoutes_1.default);
+app.use("/api/posts", CommentRoutes_1.default);
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });

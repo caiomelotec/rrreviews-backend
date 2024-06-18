@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes";
+import commentRoutes from "./routes/CommentRoutes";
 import session from "express-session";
 const MongoStore = require("connect-mongodb-session")(session);
 
@@ -15,6 +16,7 @@ mongoose
     console.log(err);
   });
 
+// express session
 const store = new MongoStore({
   uri: "mongodb://localhost:27017/rrreviews",
   collection: "sessions",
@@ -37,6 +39,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", commentRoutes);
 
 app.listen(3000, () => {
   console.log("Server running on port 3000");

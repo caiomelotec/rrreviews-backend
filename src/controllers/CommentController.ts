@@ -40,3 +40,5 @@ const fetchComments = async (req: Request, res: Response) => {
     return res.status(500).send({ message: "Something went wrong" });
   }
 };
+
+export default { createComment, fetchComments };
