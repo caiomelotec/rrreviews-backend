@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const AuthRoutes_1 = __importDefault(require("./routes/AuthRoutes"));
+const express_session_1 = __importDefault(require("express-session"));
+const MongoStore = require("connect-mongodb-session")(express_session_1.default);
 const app = (0, express_1.default)();
 // connecting to the database
 mongoose_1.default
@@ -16,6 +18,17 @@ mongoose_1.default
     .catch((err) => {
     console.log(err);
 });
+const store = new MongoStore({
+    uri: "mongodb://localhost:27017/rrreviews",
+    collection: "sessions",
+    expires: 12 * 60 * 60 * 1000,
+});
+app.use((0, express_session_1.default)({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+}));
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.status(200).send("Hello World");

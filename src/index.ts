@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes";
+import session from "express-session";
+const MongoStore = require("connect-mongodb-session")(session);
 
 const app = express();
 // connecting to the database
@@ -12,6 +14,21 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const store = new MongoStore({
+  uri: "mongodb://localhost:27017/rrreviews",
+  collection: "sessions",
+  expires: 12 * 60 * 60 * 1000,
+});
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
 
 app.use(express.json());
 
