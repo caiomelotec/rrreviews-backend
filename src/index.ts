@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes";
 import commentRoutes from "./routes/CommentRoutes";
 import session from "express-session";
+import cors from "cors";
 const MongoStore = require("connect-mongodb-session")(session);
 
 const app = express();
@@ -33,7 +34,13 @@ app.use(
 );
 
 app.use(express.json());
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello World");
 });

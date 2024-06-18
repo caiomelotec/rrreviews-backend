@@ -7,5 +7,5 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const CommentController_1 = __importDefault(require("../controllers/CommentController"));
 router.post("/comment", CommentController_1.default.createComment);
-router.get("/comments/:gameId", CommentController_1.default.createComment);
+router.get("/comments/:gameId", CommentController_1.default.fetchComments);
 exports.default = router;

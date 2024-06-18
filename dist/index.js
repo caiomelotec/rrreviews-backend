@@ -8,6 +8,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const AuthRoutes_1 = __importDefault(require("./routes/AuthRoutes"));
 const CommentRoutes_1 = __importDefault(require("./routes/CommentRoutes"));
 const express_session_1 = __importDefault(require("express-session"));
+const cors_1 = __importDefault(require("cors"));
 const MongoStore = require("connect-mongodb-session")(express_session_1.default);
 const app = (0, express_1.default)();
 // connecting to the database
@@ -32,6 +33,11 @@ app.use((0, express_session_1.default)({
     store: store,
 }));
 app.use(express_1.default.json());
+app.use((0, cors_1.default)({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 app.get("/", (req, res) => {
     res.status(200).send("Hello World");
 });
